@@ -10,14 +10,22 @@
     <description>Parallel unit testing example</description>
 
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <lombok.version>1.18.18</lombok.version>
-        <spring.version>5.3.8</spring.version>
-        <junit.jupiter.version>5.7.2</junit.jupiter.version>
-        <mockito.version>3.11.0</mockito.version>
-        <assertj.version>3.19.0</assertj.version>
+        <!--
+                <java.version>11</java.version>
+                <maven.compiler.source>11</maven.compiler.source>
+                <maven.compiler.target>11</maven.compiler.target>
+                <spring.version>5.3.25</spring.version>
+        -->
+
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <spring.version>6.0.5</spring.version>
+        <lombok.version>1.18.24</lombok.version>
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
+        <mockito.version>5.1.1</mockito.version>
+        <assertj.version>3.23.1</assertj.version>
     </properties>
 
     <dependencies>
@@ -93,7 +101,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.2</version>
             </plugin>
         </plugins>
     </build>

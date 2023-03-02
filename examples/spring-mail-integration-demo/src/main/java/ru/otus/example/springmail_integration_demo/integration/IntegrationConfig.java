@@ -1,6 +1,5 @@
 package ru.otus.example.springmail_integration_demo.integration;
 
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +16,8 @@ import org.springframework.messaging.PollableChannel;
 import ru.otus.example.springmail_integration_demo.repositories.ActivityRepository;
 import ru.otus.example.springmail_integration_demo.repositories.ActivityStatRepository;
 import ru.otus.example.springmail_integration_demo.services.UserActivityToEmailTransformer;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Configuration
@@ -44,6 +45,8 @@ public class IntegrationConfig {
     @Autowired
     private JavaMailSender mailSender;
 
+    private AtomicBoolean messageWasSandedOnceFlag = new AtomicBoolean(false);
+
     @Bean
     public PollableChannel appUserActivityInChanel() {
         return MessageChannels.queue("appUserActivityInChanel", DEFAULT_QUEUE_CAPACITY).get();
@@ -67,8 +70,12 @@ public class IntegrationConfig {
                         , mapping -> mapping.subFlowMapping(true, sub -> sub
                                 .transform(messageTransformer, TRANSFORM_METHOD_NAME)
                                 .handle(m -> {
-                                    System.out.println("Как будто посылаем письмо: " + m.getPayload());
-                                    //mailSender.send((SimpleMailMessage) m.getPayload());
+                                    SimpleMailMessage mailMessage = (SimpleMailMessage) m.getPayload();
+                                    System.out.println("Как будто посылаем письмо: " + mailMessage.getText());
+                                    if (!messageWasSandedOnceFlag.get()) {
+                                        mailSender.send(mailMessage);
+                                        messageWasSandedOnceFlag.set(true);
+                                    }
                                 })
                         )
                         .subFlowMapping(false, IntegrationFlowDefinition::nullChannel)
